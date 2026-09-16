@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour {
     [SerializeField]
     PlaneHUD planeHUD;
     [SerializeField]
-    float mouseSensitivity = 0.05f;
+    float mouseSensitivity = 0.025f;
 
     Vector3 controlInput;
     PlaneCamera planeCamera;
