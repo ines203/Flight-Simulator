@@ -119,6 +119,8 @@ public class Plane : MonoBehaviour {
     new PlaneAnimation animation;
 
     float throttleInput;
+    bool airbrakeInput;
+    bool flapsDeployed;
     Vector3 controlInput;
 
     Vector3 lastVelocity;
@@ -212,6 +214,7 @@ public class Plane : MonoBehaviour {
     public float PredictedAngleOfAttack { get; private set; }
     public float AngleOfAttackYaw { get; private set; }
     public bool AirbrakeDeployed { get; private set; }
+    public bool FlapsDeployed { get { return flapsDeployed; } }
 
     public float Mach {
         get {
@@ -261,6 +264,16 @@ public class Plane : MonoBehaviour {
         controlInput = Vector3.ClampMagnitude(input, 1);
     }
 
+    public void SetAirbrakeInput(bool input) {
+        if (Dead) return;
+        airbrakeInput = input;
+    }
+
+    public void ToggleFlaps() {
+        if (Dead) return;
+        flapsDeployed = !flapsDeployed;
+    }
+
     public void ApplyDamage(float damage) {
         Health -= damage;
     }
@@ -282,7 +295,7 @@ public class Plane : MonoBehaviour {
         //throttle is [0, 1]
         Throttle = Utilities.MoveTo(Throttle, target, throttleSpeed * Mathf.Abs(throttleInput), dt);
 
-        AirbrakeDeployed = Throttle == 0 && throttleInput == -1;
+        AirbrakeDeployed = airbrakeInput || (Throttle == 0 && throttleInput == -1);
 
         if (AirbrakeDeployed) {
             foreach (var lg in landingGear) {

@@ -1065,7 +1065,19 @@ MonoBehaviour:
     m_ActionId: cdd2542b-3da6-4431-be9c-bbf306e4dcd5
     m_ActionName: Plane/Camera
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1303602090}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnToggleFlaps
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 0e572958-b17b-4a43-950d-d9a9324fbc89
     m_ActionName: Plane/ToggleFlaps
   - m_PersistentCalls:
@@ -1080,6 +1092,22 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: b0d256fa-cc8c-4a22-925d-479ad7049947
     m_ActionName: Plane/ToggleAI[/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1303602090}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnAirbrakeInput
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: ed69d3ff-db30-4a92-a2c3-23952f143884
+    m_ActionName: Plane/Airbrake
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Plane
