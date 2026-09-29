@@ -19,6 +19,8 @@ public class Spawner : MonoBehaviour {
 
     GameObject activePlane;
 
+    public Plane ActivePlane { get; private set; }
+
     public bool SpawnInAir {
         get {
             return spawnInAir;
@@ -52,7 +54,7 @@ public class Spawner : MonoBehaviour {
         Transform t = activePlane.GetComponent<Transform>();
         t.SetPositionAndRotation(spawnPoint.position, spawnPoint.rotation);
 
-        Plane plane = activePlane.GetComponent<Plane>();
-        playerController.SetPlane(plane);
+        ActivePlane = activePlane.GetComponent<Plane>();
+        playerController.SetPlane(ActivePlane);
     }
 }
