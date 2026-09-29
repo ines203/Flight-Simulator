@@ -10,9 +10,12 @@ public class PlayerController : MonoBehaviour {
     Plane plane;
     [SerializeField]
     PlaneHUD planeHUD;
+    [SerializeField]
+    float mouseSensitivity = 0.025f;
 
     Vector3 controlInput;
     PlaneCamera planeCamera;
+    Vector2 mouseLook;
 
     void Awake() {
         planeCamera = GetComponent<PlaneCamera>();
@@ -68,7 +71,28 @@ public class PlayerController : MonoBehaviour {
         if (plane == null) return;
 
         var input = context.ReadValue<Vector2>();
-        planeCamera.SetInput(input);
+
+        if (context.control != null && context.control.device is Mouse) {
+            mouseLook.x = Mathf.Clamp(mouseLook.x + input.x * mouseSensitivity, -1f, 1f);
+            mouseLook.y = Mathf.Clamp(mouseLook.y + input.y * mouseSensitivity, -1f, 1f);
+            planeCamera.SetInput(mouseLook);
+        } else {
+            planeCamera.SetInput(input);
+        }
+    }
+
+    public void OnToggleFlaps(InputAction.CallbackContext context) {
+        if (plane == null) return;
+
+        if (context.phase == InputActionPhase.Performed) {
+            plane.ToggleFlaps();
+        }
+    }
+
+    public void OnAirbrakeInput(InputAction.CallbackContext context) {
+        if (plane == null) return;
+
+        plane.SetAirbrakeInput(context.ReadValueAsButton());
     }
 
     void Update() {
