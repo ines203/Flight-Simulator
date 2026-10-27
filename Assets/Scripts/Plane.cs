@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Plane : MonoBehaviour {
+public class Plane : MonoBehaviour, IDamageable {
     public const float poundsForceToNewtons = 4.44822f;
     public const float metersToFeet = 3.28084f;
     public const float feetToMeters = 1.0f / metersToFeet;
