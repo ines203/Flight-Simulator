@@ -503,7 +503,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -927199367670048503, guid: dd3d7065258cc4f40b6713630d03a2e4, type: 3}
       propertyPath: m_Name
-      value: Missile
+      value: MissileProjectile
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: dd3d7065258cc4f40b6713630d03a2e4, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -577,6 +581,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MissileProp
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: dd3d7065258cc4f40b6713630d03a2e4, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -606,13 +614,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1289388964}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.478746, y: 0.98420167, z: -0.033472452}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0.475, y: 0.98420167, z: -0.033472452}
   m_LocalScale: {x: 0.6989018, y: 4.4940743, z: 3.046737}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1560513831}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!1 &1393017990
 GameObject:
   m_ObjectHideFlags: 0
@@ -769,6 +777,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _speed: 5
+  _explosionPrefab: {fileID: 0}
+  _smokeTrail: {fileID: 0}
+  _missileProp: {fileID: 0}
 --- !u!1 &1560513826
 GameObject:
   m_ObjectHideFlags: 0
@@ -783,8 +794,8 @@ GameObject:
   - component: {fileID: 1560513828}
   - component: {fileID: 1560513827}
   - component: {fileID: 1560513832}
-  m_Layer: 0
-  m_Name: Cube (4)
+  m_Layer: 7
+  m_Name: cubeLauncher
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -812,7 +823,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -918,7 +929,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e07bb0959069f7a42aed4161b589e785, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cubelauncher: {fileID: 1398921569}
+  _rocket: {fileID: 2348240256922655697, guid: 51fb722c77e5357498db9770f7f225cf, type: 3}
+  _rocketPosition: {fileID: 1289388964}
 --- !u!4 &1715075606 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: dd3d7065258cc4f40b6713630d03a2e4, type: 3}
