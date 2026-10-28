@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour {
+public class PlayerController : MonoBehaviour
+{
     [SerializeField]
     new Camera camera;
     [SerializeField]
@@ -13,21 +14,28 @@ public class PlayerController : MonoBehaviour {
 
     Vector3 controlInput;
     PlaneCamera planeCamera;
+    [SerializeField] private launcher missileLauncher;
 
-    void Awake() {
+
+    void Awake()
+    {
         planeCamera = GetComponent<PlaneCamera>();
     }
 
-    void Start() {
-        if (plane != null) {
+    void Start()
+    {
+        if (plane != null)
+        {
             SetPlane(plane);
         }
     }
 
-    public void SetPlane(Plane plane) {
+    public void SetPlane(Plane plane)
+    {
         this.plane = plane;
 
-        if (plane != null && planeHUD != null) {
+        if (plane != null && planeHUD != null)
+        {
             planeHUD.SetPlane(plane);
             planeHUD.SetCamera(camera);
         }
@@ -35,43 +43,65 @@ public class PlayerController : MonoBehaviour {
         planeCamera.SetPlane(plane);
     }
 
-    public void OnToggleHelp(InputAction.CallbackContext context) {
+    public void OnToggleHelp(InputAction.CallbackContext context)
+    {
         if (plane == null) return;
 
-        if (context.phase == InputActionPhase.Performed) {
+        if (context.phase == InputActionPhase.Performed)
+        {
             planeHUD.ToggleHelpDialogs();
         }
     }
 
-    public void SetThrottleInput(InputAction.CallbackContext context) {
+    public void SetThrottleInput(InputAction.CallbackContext context)
+    {
         if (plane == null) return;
         //if (aiController.enabled) return;
 
         plane.SetThrottleInput(context.ReadValue<float>());
     }
 
-    public void OnRollPitchInput(InputAction.CallbackContext context) {
+    public void OnRollPitchInput(InputAction.CallbackContext context)
+    {
         if (plane == null) return;
 
         var input = context.ReadValue<Vector2>();
         controlInput = new Vector3(input.y, controlInput.y, -input.x);
     }
 
-    public void OnYawInput(InputAction.CallbackContext context) {
+    public void OnYawInput(InputAction.CallbackContext context)
+    {
         if (plane == null) return;
 
         var input = context.ReadValue<float>();
         controlInput = new Vector3(controlInput.x, input, controlInput.z);
     }
 
-    public void OnCameraInput(InputAction.CallbackContext context) {
+    public void OnCameraInput(InputAction.CallbackContext context)
+    {
         if (plane == null) return;
 
         var input = context.ReadValue<Vector2>();
         planeCamera.SetInput(input);
     }
 
-    void Update() {
+
+    public void OnFireMissile(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            Debug.Log("L3 détecté !");
+
+            if (missileLauncher != null)
+            {
+                missileLauncher.FireMissiles();
+            }
+        }
+    }
+
+
+    void Update()
+    {
         if (plane == null) return;
 
         plane.SetControlInput(controlInput);

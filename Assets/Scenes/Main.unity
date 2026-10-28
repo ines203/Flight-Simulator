@@ -6704,6 +6704,7 @@ MonoBehaviour:
   plane: {fileID: 0}
   planeHUD: {fileID: 689740482}
   mouseSensitivity: 0.025
+  missileLauncher: {fileID: 0}
   fireRate: 15
   bulletSpeed: 400
   bulletDamage: 10
@@ -6831,7 +6832,19 @@ MonoBehaviour:
     m_ActionId: 0e572958-b17b-4a43-950d-d9a9324fbc89
     m_ActionName: Plane/ToggleFlaps
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1303602090}
+        m_TargetAssemblyTypeName: PlayerController, F16_FlightSim
+        m_MethodName: OnFireMissile
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 54bc0053-bbe2-45cd-80b6-dd2a4f0dee6d
     m_ActionName: Plane/FireMissile
   - m_PersistentCalls:
