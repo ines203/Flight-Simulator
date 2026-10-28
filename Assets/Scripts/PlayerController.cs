@@ -1,3 +1,4 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,11 +14,23 @@ public class PlayerController : MonoBehaviour
     PlaneHUD planeHUD;
     [SerializeField]
     float mouseSensitivity = 0.025f;
+    [SerializeField]
+    float fireRate = 15f;
+    [SerializeField]
+    float bulletSpeed = 400f;
+    [SerializeField]
+    float bulletDamage = 10f;
+    [SerializeField]
+    float bulletLifetime = 3f;
+    [SerializeField]
+    Vector3 muzzleOffset = new Vector3(0, 0, 6f);
 
     Vector3 controlInput;
     PlaneCamera planeCamera;
     [SerializeField] private launcher missileLauncher;
     Vector2 mouseLook;
+    bool firing;
+    float nextFireTime;
 
     void Awake()
     {
@@ -36,8 +49,10 @@ public class PlayerController : MonoBehaviour
     {
         this.plane = plane;
 
-        missileLauncher = plane != null ? plane.GetComponentInChildren<launcher>(): null;
-        
+        missileLauncher = plane != null
+            ? plane.GetComponentInChildren<launcher>()
+            : null;
+
         if (plane != null && planeHUD != null)
         {
             planeHUD.SetPlane(plane);
@@ -60,7 +75,6 @@ public class PlayerController : MonoBehaviour
     public void SetThrottleInput(InputAction.CallbackContext context)
     {
         if (plane == null) return;
-        //if (aiController.enabled) return;
 
         plane.SetThrottleInput(context.ReadValue<float>());
     }
@@ -89,8 +103,13 @@ public class PlayerController : MonoBehaviour
 
         if (context.control != null && context.control.device is Mouse)
         {
-            mouseLook.x = Mathf.Clamp(mouseLook.x + input.x * mouseSensitivity, -1f, 1f);
-            mouseLook.y = Mathf.Clamp(mouseLook.y + input.y * mouseSensitivity, -1f, 1f);
+            mouseLook.x = Mathf.Clamp(
+                mouseLook.x + input.x * mouseSensitivity, -1f, 1f
+            );
+            mouseLook.y = Mathf.Clamp(
+                mouseLook.y + input.y * mouseSensitivity, -1f, 1f
+            );
+
             planeCamera.SetInput(mouseLook);
         }
         else
@@ -116,6 +135,7 @@ public class PlayerController : MonoBehaviour
         plane.SetAirbrakeInput(context.ReadValueAsButton());
     }
 
+    // Tir des missiles avec L3
     public void OnFireMissile(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -133,10 +153,43 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // Commande du canon
+    public void OnFireCannon(InputAction.CallbackContext context)
+    {
+        firing = context.ReadValueAsButton();
+    }
+
+    // Création des projectiles du canon
+    void FireCannon()
+    {
+        var planeTransform = plane.transform;
+        Vector3 position = planeTransform.TransformPoint(muzzleOffset);
+        Vector3 velocity =
+            plane.Rigidbody.velocity + planeTransform.forward * bulletSpeed;
+
+        Bullet.Spawn(
+            position,
+            planeTransform.rotation,
+            velocity,
+            bulletDamage,
+            bulletLifetime,
+            planeTransform
+        );
+    }
+
     void Update()
     {
         if (plane == null) return;
 
         plane.SetControlInput(controlInput);
+
+        if (firing &&
+            !plane.Dead &&
+            plane.Rigidbody != null &&
+            Time.time >= nextFireTime)
+        {
+            nextFireTime = Time.time + 1f / fireRate;
+            FireCannon();
+        }
     }
 }
