@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Rocket : MonoBehaviour
 {
-    [SerializeField] private float _speed = 10000f;
+    [SerializeField] private float _speed = 300f;
+    [SerializeField] private float missileDamage = 25f;
     // [SerializeField] private ParticleSystem _smokeTrail;
     [SerializeField] private ParticleSystem _explosionPrefab;
     [SerializeField] private ParticleSystem _smokeTrail;
@@ -43,6 +44,19 @@ public class Rocket : MonoBehaviour
 
         ParticleSystem explosion = Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
         explosion.Play();
+
+        Destroy(explosion.gameObject, explosion.main.duration
+           + explosion.main.startLifetime.constantMax);
+
+        IDamageable target = collision.collider.GetComponentInParent<IDamageable>();
+
+        if (target != null)
+        {
+            target.ApplyDamage(missileDamage);
+            Debug.Log("Missile : " + missileDamage + " dégâts appliqués !");
+        }
+
+        Destroy(gameObject);
     }
 
 
