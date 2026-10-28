@@ -12,10 +12,22 @@ public class PlayerController : MonoBehaviour {
     PlaneHUD planeHUD;
     [SerializeField]
     float mouseSensitivity = 0.025f;
+    [SerializeField]
+    float fireRate = 15f;
+    [SerializeField]
+    float bulletSpeed = 400f;
+    [SerializeField]
+    float bulletDamage = 10f;
+    [SerializeField]
+    float bulletLifetime = 3f;
+    [SerializeField]
+    Vector3 muzzleOffset = new Vector3(0, 0, 6f);
 
     Vector3 controlInput;
     PlaneCamera planeCamera;
     Vector2 mouseLook;
+    bool firing;
+    float nextFireTime;
 
     void Awake() {
         planeCamera = GetComponent<PlaneCamera>();
@@ -95,9 +107,26 @@ public class PlayerController : MonoBehaviour {
         plane.SetAirbrakeInput(context.ReadValueAsButton());
     }
 
+    public void OnFireCannon(InputAction.CallbackContext context) {
+        firing = context.ReadValueAsButton();
+    }
+
+    void FireCannon() {
+        var planeTransform = plane.transform;
+        Vector3 position = planeTransform.TransformPoint(muzzleOffset);
+        Vector3 velocity = plane.Rigidbody.velocity + planeTransform.forward * bulletSpeed;
+
+        Bullet.Spawn(position, planeTransform.rotation, velocity, bulletDamage, bulletLifetime, planeTransform);
+    }
+
     void Update() {
         if (plane == null) return;
 
         plane.SetControlInput(controlInput);
+
+        if (firing && !plane.Dead && plane.Rigidbody != null && Time.time >= nextFireTime) {
+            nextFireTime = Time.time + 1f / fireRate;
+            FireCannon();
+        }
     }
 }
