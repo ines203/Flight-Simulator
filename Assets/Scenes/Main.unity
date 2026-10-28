@@ -3840,19 +3840,6 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!114 &705507996
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 705507993}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8852ef2a31fa4518b4004cd918f5047b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sun: {fileID: 705507994}
 --- !u!4 &705507995
 Transform:
   m_ObjectHideFlags: 0
@@ -3868,6 +3855,31 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &705507996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 705507993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8852ef2a31fa4518b4004cd918f5047b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sun: {fileID: 705507994}
+  mode: 0
+  dayDuration: 240
+  transitionDuration: 6
+  startTime: 0.3
+  sunYaw: -30
+  maxSunIntensity: 1
+  nightBrightness: 0.8
+  dayExposure: 1.3
+  dayColor: {r: 1, g: 0.957, b: 0.839, a: 1}
+  duskColor: {r: 1, g: 0.45, b: 0.2, a: 1}
+  showInfo: 1
+  moonColor: {r: 0.45, g: 0.55, b: 0.85, a: 1}
 --- !u!1 &714552133
 GameObject:
   m_ObjectHideFlags: 0
@@ -6692,6 +6704,11 @@ MonoBehaviour:
   plane: {fileID: 0}
   planeHUD: {fileID: 689740482}
   mouseSensitivity: 0.025
+  fireRate: 15
+  bulletSpeed: 400
+  bulletDamage: 10
+  bulletLifetime: 3
+  muzzleOffset: {x: 0, y: 0, z: 6}
 --- !u!114 &1303602091
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10934,6 +10951,130 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7818057434754175578, guid: 0ce91553b0f624444bdcc02b62c934ab, type: 3}
   m_PrefabInstance: {fileID: 689740481}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &3291261463367264572
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6832577332404251287}
+  - component: {fileID: 9017351052251869721}
+  m_Layer: 0
+  m_Name: BalloonSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1001 &3510755904884491501
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2649862465128632838, guid: d1e25b3de16086b4da1863ddcc4aa6ed, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2649862465128632838, guid: d1e25b3de16086b4da1863ddcc4aa6ed, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2649862465128632838, guid: d1e25b3de16086b4da1863ddcc4aa6ed, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2649862465128632838, guid: d1e25b3de16086b4da1863ddcc4aa6ed, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2649862465128632838, guid: d1e25b3de16086b4da1863ddcc4aa6ed, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2649862465128632838, guid: d1e25b3de16086b4da1863ddcc4aa6ed, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2649862465128632838, guid: d1e25b3de16086b4da1863ddcc4aa6ed, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2649862465128632838, guid: d1e25b3de16086b4da1863ddcc4aa6ed, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2649862465128632838, guid: d1e25b3de16086b4da1863ddcc4aa6ed, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2649862465128632838, guid: d1e25b3de16086b4da1863ddcc4aa6ed, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7772687136102589331, guid: d1e25b3de16086b4da1863ddcc4aa6ed, type: 3}
+      propertyPath: m_Name
+      value: Balloon
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d1e25b3de16086b4da1863ddcc4aa6ed, type: 3}
+--- !u!4 &6832577332404251287
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3291261463367264572}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9017351052251869721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3291261463367264572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65b39c1b60f382d4fb22b2467422d836, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  balloonPrefab: {fileID: 7772687136102589331, guid: d1e25b3de16086b4da1863ddcc4aa6ed, type: 3}
+  spawnInVolLibre: 1
+  spawnInCombat: 1
+  spawnInVoyage: 0
+  count: 30
+  seed: 12345
+  randomizeSeed: 0
+  terrain: {fileID: 1172657485}
+  edgeMargin: 1000
+  useWholeTerrain: 0
+  exclusionCenter: {fileID: 526688563}
+  minRadius: 2000
+  maxRadius: 12000
+  minDistanceBetweenBalloons: 300
+  maxAttemptsPerBalloon: 30
+  heightAboveGround: 150
+  heightVariation: 100
+  slopeSampleRadius: 60
+  forceGameMode: 
+  showInfo: 1
+  onAllBalloonsDestroyed:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -10962,3 +11103,5 @@ SceneRoots:
   - {fileID: 1574853148}
   - {fileID: 61565775}
   - {fileID: 1717527641}
+  - {fileID: 3510755904884491501}
+  - {fileID: 6832577332404251287}
