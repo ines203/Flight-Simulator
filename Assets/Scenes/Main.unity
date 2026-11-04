@@ -6704,12 +6704,12 @@ MonoBehaviour:
   plane: {fileID: 0}
   planeHUD: {fileID: 689740482}
   mouseSensitivity: 0.025
-  missileLauncher: {fileID: 0}
   fireRate: 15
   bulletSpeed: 400
   bulletDamage: 10
   bulletLifetime: 3
   muzzleOffset: {x: 0, y: 0, z: 6}
+  missileLauncher: {fileID: 0}
 --- !u!114 &1303602091
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8932,6 +8932,52 @@ Transform:
   m_Children: []
   m_Father: {fileID: 521703420}
   m_LocalEulerAnglesHint: {x: 0, y: 22.5, z: 0}
+--- !u!1 &1749566509
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1749566511}
+  - component: {fileID: 1749566510}
+  m_Layer: 0
+  m_Name: EnemySpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1749566510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1749566509}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb10492c086257248b909965ce5fd3c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  planePrefab: {fileID: 3499999813771308527, guid: 3f93c9bb3410dca46b4d881f70697ac4, type: 3}
+  enemySpawnPoint: {fileID: 1782280514}
+--- !u!4 &1749566511
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1749566509}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.028323464, y: 0.17863333, z: 0.0051836185, w: 0.98349434}
+  m_LocalPosition: {x: -3348.9429, y: 1055.6759, z: 4548.32}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 201.705, z: 0}
 --- !u!1 &1767718851
 GameObject:
   m_ObjectHideFlags: 0
@@ -9038,6 +9084,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 521703420}
   m_LocalEulerAnglesHint: {x: 0, y: 22.5, z: 0}
+--- !u!1 &1782280513
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1782280514}
+  m_Layer: 0
+  m_Name: EnemySpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1782280514
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1782280513}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.9848078, z: -0, w: -0.17364809}
+  m_LocalPosition: {x: -7795.97, y: 247.11, z: -7144.51}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 200, z: 0}
 --- !u!1 &1819304195
 GameObject:
   m_ObjectHideFlags: 0
@@ -11118,3 +11195,5 @@ SceneRoots:
   - {fileID: 1717527641}
   - {fileID: 3510755904884491501}
   - {fileID: 6832577332404251287}
+  - {fileID: 1749566511}
+  - {fileID: 1782280514}

@@ -99,7 +99,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 646ea4a007fe67f4090a85dd87c97fe5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 5
+  _speed: 300
+  missileDamage: 25
   _explosionPrefab: {fileID: 3163910051601079367, guid: 741982d4609f46943a01740eb3a9e93f, type: 3}
   _smokeTrail: {fileID: 2981456713231555785, guid: 8c3a1dfb4fa527e47b2d5f74fc96c0fc, type: 3}
 --- !u!65 &1391551470973688794

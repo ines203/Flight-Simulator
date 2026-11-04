@@ -5,7 +5,8 @@ using UnityEngine.InputSystem.XR;
 using UnityEngine.UI;
 using static UnityEngine.GraphicsBuffer;
 
-public class PlaneHUD : MonoBehaviour {
+public class PlaneHUD : MonoBehaviour
+{
     [SerializeField]
     float updateRate;
     [SerializeField]
@@ -111,7 +112,8 @@ public class PlaneHUD : MonoBehaviour {
     const float metersToKnots = 1.94384f;
     const float metersToFeet = 3.28084f;
 
-    void Start() {
+    void Start()
+    {
         canvasTransform = GetComponent<RectTransform>();
         canvas = GetComponent<Canvas>();
 
@@ -126,20 +128,26 @@ public class PlaneHUD : MonoBehaviour {
         missileArrowGO = missileArrow.gameObject;
     }
 
-    public void SetPlane(Plane plane) {
+    public void SetPlane(Plane plane)
+    {
         this.plane = plane;
 
-        if (plane == null) {
+        if (plane == null)
+        {
             planeTransform = null;
-        } else {
+        }
+        else
+        {
             planeTransform = plane.GetComponent<Transform>();
         }
 
-        if (compass != null) {
+        if (compass != null)
+        {
             compass.SetPlane(plane);
         }
 
-        if (pitchLadder != null) {
+        if (pitchLadder != null)
+        {
             pitchLadder.SetPlane(plane);
         }
 
@@ -152,99 +160,140 @@ public class PlaneHUD : MonoBehaviour {
         centerOfGravitySlider.value = plane.CenterOfGravityPosition * 100;
     }
 
-    public void SetCamera(Camera camera) {
+    public void SetCamera(Camera camera)
+    {
         this.camera = camera;
 
-        if (camera == null) {
+        if (camera == null)
+        {
             cameraTransform = null;
-        } else {
+        }
+        else
+        {
             cameraTransform = camera.GetComponent<Transform>();
         }
 
-        if (compass != null) {
+        if (compass != null)
+        {
             compass.SetCamera(camera);
         }
 
-        if (pitchLadder != null) {
+        if (pitchLadder != null)
+        {
             pitchLadder.SetCamera(camera);
         }
     }
 
-    public void ToggleHelpDialogs() {
-        foreach (var dialog in helpDialogs) {
+    public void ToggleHelpDialogs()
+    {
+        foreach (var dialog in helpDialogs)
+        {
             dialog.SetActive(!dialog.activeSelf);
         }
     }
 
-    void ResetToggle(Toggle toggle) {
-        if (toggle != null) {
+    void ResetToggle(Toggle toggle)
+    {
+        if (toggle != null)
+        {
             toggle.isOn = true;
         }
     }
 
-    void UpdateVelocityMarker() {
+    void UpdateVelocityMarker()
+    {
         var velocity = planeTransform.forward;
 
-        if (plane.LocalVelocity.sqrMagnitude > 1) {
+        if (plane.LocalVelocity.sqrMagnitude > 1)
+        {
             velocity = plane.Rigidbody.velocity;
         }
 
         var hudPos = TransformToHUDSpace(cameraTransform.position + velocity);
 
-        if (hudPos.z > 0) {
+        if (hudPos.z > 0)
+        {
             velocityMarkerGO.SetActive(true);
             velocityMarker.localPosition = new Vector3(hudPos.x, hudPos.y, 0);
-        } else {
+        }
+        else
+        {
             velocityMarkerGO.SetActive(false);
         }
     }
 
-    void UpdateAirspeed() {
+    void UpdateAirspeed()
+    {
         var speed = plane.LocalVelocity.z * metersToKnots;
         airspeed.text = string.Format("{0:0}", speed);
     }
 
-    void UpdateAOA() {
+    void UpdateAOA()
+    {
         aoaIndicator.text = string.Format("{0:0.0} AOA", plane.AngleOfAttack * Mathf.Rad2Deg);
         aoaPredictedIndicator.text = string.Format("{0:0.0} AOA", plane.PredictedAngleOfAttack);
     }
 
-    void UpdateGForce() {
+    void UpdateGForce()
+    {
         var gforce = plane.LocalGForce.y / 9.81f;
         gforceIndicator.text = string.Format("{0:0.0} G", gforce);
         var gforcePredicted = plane.PredictedLocalGForce.y / 9.81f;
         gforcePredictedIndicator.text = string.Format("{0:0.0} G", gforcePredicted);
     }
 
-    void UpdateMach() {
+    void UpdateMach()
+    {
         var mach = plane.Mach;
         machIndicator.text = string.Format("{0:0.0} M", mach);
     }
 
-    void UpdateAltitude() {
+    void UpdateAltitude()
+    {
         var altitude = plane.Rigidbody.position.y * metersToFeet;
         this.altitude.text = string.Format("{0:0}", altitude);
     }
 
-    Vector3 TransformToHUDSpace(Vector3 worldSpace) {
+    Vector3 TransformToHUDSpace(Vector3 worldSpace)
+    {
         var screenSpace = camera.WorldToScreenPoint(worldSpace);
         return (screenSpace - new Vector3(camera.pixelWidth / 2, camera.pixelHeight / 2)) / canvas.scaleFactor;
     }
 
-    void UpdateHUDCenter() {
+    void UpdateHUDCenter()
+    {
         var rotation = cameraTransform.localEulerAngles;
         var hudPos = TransformToHUDSpace(cameraTransform.position + planeTransform.forward);
 
-        if (hudPos.z > 0) {
+        if (hudPos.z > 0)
+        {
             hudCenterGO.SetActive(true);
             hudCenter.localPosition = new Vector3(hudPos.x, hudPos.y, 0);
             hudCenter.localEulerAngles = new Vector3(0, 0, -rotation.z);
-        } else {
+        }
+        else
+        {
             hudCenterGO.SetActive(false);
         }
     }
 
-    void LateUpdate() {
+    void UpdateHealth()
+    {
+        if (plane.MaxHealth <= 0) return;
+
+        float healthPercentage = plane.Health / plane.MaxHealth;
+
+        healthBar.SetValue(healthPercentage);
+
+        healthText.text = string.Format(
+            "{0:0} / {1:0} HP",
+            plane.Health,
+            plane.MaxHealth
+        );
+    }
+
+    void LateUpdate()
+    {
         if (plane == null) return;
         if (camera == null) return;
 
@@ -253,19 +302,24 @@ public class PlaneHUD : MonoBehaviour {
         throttleArrow.SetValue(plane.Throttle);
         throttleBar.SetValue(power);
 
-        if (!plane.Dead) {
+        if (!plane.Dead)
+        {
             UpdateVelocityMarker();
             UpdateHUDCenter();
-        } else {
+        }
+        else
+        {
             hudCenterGO.SetActive(false);
             velocityMarkerGO.SetActive(false);
         }
 
         UpdateAirspeed();
         UpdateAltitude();
+        UpdateHealth();
 
         //update these elements at reduced rate to make reading them easier
-        if (Time.time > lastUpdateTime + (1f / updateRate)) {
+        if (Time.time > lastUpdateTime + (1f / updateRate))
+        {
             UpdateAOA();
             UpdateGForce();
             UpdateMach();
@@ -273,52 +327,70 @@ public class PlaneHUD : MonoBehaviour {
         }
     }
 
-    public void SetEnableEngine(bool value) {
-        if (plane != null) {
+
+
+    public void SetEnableEngine(bool value)
+    {
+        if (plane != null)
+        {
             plane.EngineEnabled = value;
         }
     }
 
-    public void SetEnableFCS(bool value) {
-        if (plane != null) {
+    public void SetEnableFCS(bool value)
+    {
+        if (plane != null)
+        {
             plane.EnableFCS = value;
         }
     }
 
-    public void SetEnableRollControl(bool value) {
-        if (plane != null) {
+    public void SetEnableRollControl(bool value)
+    {
+        if (plane != null)
+        {
             plane.EnableRollControl = value;
         }
     }
 
-    public void SetEnablePitchControl(bool value) {
-        if (plane != null) {
+    public void SetEnablePitchControl(bool value)
+    {
+        if (plane != null)
+        {
             plane.EnablePitchControl = value;
         }
     }
 
-    public void SetEnableYawControl(bool value) {
-        if (plane != null) {
+    public void SetEnableYawControl(bool value)
+    {
+        if (plane != null)
+        {
             plane.EnableYawControl = value;
         }
     }
 
-    public void SetCenterOfGravity(float value) {
-        if (plane != null) {
+    public void SetCenterOfGravity(float value)
+    {
+        if (plane != null)
+        {
             float effectiveValue = value / 100f;
             plane.CenterOfGravityPosition = effectiveValue;
             centerOfGravityLabel.text = string.Format("{0:.00}", effectiveValue);
         }
     }
 
-    public void ToggleConfigMenu() {
-        if (configMenu != null) {
+    public void ToggleConfigMenu()
+    {
+        if (configMenu != null)
+        {
             configMenu.SetActive(!configMenu.activeSelf);
         }
     }
 
-    public void ToggleHelpMenu() {
-        if (helpDialog != null) {
+    public void ToggleHelpMenu()
+    {
+        if (helpDialog != null)
+        {
             helpDialog.SetActive(!helpDialog.activeSelf);
         }
     }

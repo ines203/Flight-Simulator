@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class launcher : MonoBehaviour
 {
     [SerializeField] private GameObject _rocket;
@@ -28,6 +29,31 @@ public class launcher : MonoBehaviour
     //     }
     // }
 
+    // public void FireMissile()
+    // {
+    //     if (_rocket == null || _missilePropR == null || _missilePropL == null)
+    //     {
+    //         Debug.LogWarning("Missiles non configurés !");
+    //         return;
+    //     }
+
+    //     Debug.Log("Fire Missiles");
+
+    //     Instantiate(
+    //         _rocket,
+    //         _missilePropR.transform.position,
+    //         _missilePropR.transform.rotation
+    //     );
+
+    //     Instantiate(
+    //         _rocket,
+    //         _missilePropL.transform.position,
+    //         _missilePropL.transform.rotation
+    //     );
+    // }
+
+
+
     public void FireMissile()
     {
         if (_rocket == null || _missilePropR == null || _missilePropL == null)
@@ -36,18 +62,40 @@ public class launcher : MonoBehaviour
             return;
         }
 
-        Debug.Log("Fire Missiles");
+        Rigidbody planeRb = GetComponentInParent<Rigidbody>();
 
-        Instantiate(
+        if (planeRb == null)
+        {
+            Debug.LogError("Rigidbody de l'avion introuvable !");
+            return;
+        }
+
+        Vector3 planeVelocity = planeRb.velocity;
+
+        Quaternion rotation = Quaternion.LookRotation(
+            planeRb.transform.forward,
+            planeRb.transform.up
+        );
+
+        // Missile droit
+        GameObject missileR = Instantiate(
             _rocket,
             _missilePropR.transform.position,
-            _missilePropR.transform.rotation
+            rotation
         );
 
-        Instantiate(
+        missileR.GetComponent<Rocket>().Initialize(planeVelocity);
+
+
+        // Missile gauche
+        GameObject missileL = Instantiate(
             _rocket,
             _missilePropL.transform.position,
-            _missilePropL.transform.rotation
+            rotation
         );
+
+        missileL.GetComponent<Rocket>().Initialize(planeVelocity);
     }
+
+
 }

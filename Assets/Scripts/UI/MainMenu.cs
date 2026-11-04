@@ -18,8 +18,11 @@ public class MainMenu : MonoBehaviour {
     }
 
     public void StartCombatAerien() {
-        if (comingSoonPanel != null) {
-            comingSoonPanel.SetActive(true);
-        }
+        // if (comingSoonPanel != null) {
+        //     comingSoonPanel.SetActive(true);
+        // }
+
+        PlayerPrefs.SetString("GameMode", "CombatLibre");
+        SceneManager.LoadScene(gameplaySceneName);
     }
 }
