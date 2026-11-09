@@ -117,6 +117,9 @@ public class PlaneHUD : MonoBehaviour
         canvasTransform = GetComponent<RectTransform>();
         canvas = GetComponent<Canvas>();
 
+        airspeed.horizontalOverflow = HorizontalWrapMode.Overflow;
+        altitude.horizontalOverflow = HorizontalWrapMode.Overflow;
+
         hudCenterGO = hudCenter.gameObject;
         velocityMarkerGO = velocityMarker.gameObject;
         targetBoxGO = targetBox.gameObject;
@@ -225,7 +228,7 @@ public class PlaneHUD : MonoBehaviour
     void UpdateAirspeed()
     {
         var speed = plane.LocalVelocity.z * metersToKnots;
-        airspeed.text = string.Format("{0:0}", speed);
+        airspeed.text = string.Format("{0:0} kt", speed);
     }
 
     void UpdateAOA()
@@ -251,7 +254,7 @@ public class PlaneHUD : MonoBehaviour
     void UpdateAltitude()
     {
         var altitude = plane.Rigidbody.position.y * metersToFeet;
-        this.altitude.text = string.Format("{0:0}", altitude);
+        this.altitude.text = string.Format("{0:0} ft", altitude);
     }
 
     Vector3 TransformToHUDSpace(Vector3 worldSpace)
