@@ -6704,12 +6704,12 @@ MonoBehaviour:
   plane: {fileID: 0}
   planeHUD: {fileID: 689740482}
   mouseSensitivity: 0.025
-  missileLauncher: {fileID: 0}
   fireRate: 15
   bulletSpeed: 400
   bulletDamage: 10
   bulletLifetime: 3
   muzzleOffset: {x: 0, y: 0, z: 6}
+  missileLauncher: {fileID: 0}
 --- !u!114 &1303602091
 MonoBehaviour:
   m_ObjectHideFlags: 0
