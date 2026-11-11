@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 6528465298103069587}
   - component: {fileID: 5580802459022567831}
   - component: {fileID: 7362150036858998434}
+  - component: {fileID: 4157371629881685231}
   m_Layer: 0
   m_Name: NewF16
   m_TagString: Untagged
@@ -442,6 +443,35 @@ MonoBehaviour:
   _rocket: {fileID: 2348240256922655697, guid: 51fb722c77e5357498db9770f7f225cf, type: 3}
   _missilePropR: {fileID: 2367658367063588616}
   _missilePropL: {fileID: 5744705701066519095}
+  _launchSound: {fileID: 0}
+  _launchVolume: 0.8
+--- !u!114 &4157371629881685231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 203294324026478741}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7638cf6d586cc74b88c9965ea2b7085, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  engineLoop: {fileID: 8300000, guid: 7adc11ff2542c0846b42f1d9e213cf81, type: 3}
+  engineVolumeIdle: 0.15
+  engineVolumeMax: 0.7
+  enginePitchIdle: 0.6
+  enginePitchMax: 1.5
+  speedPitchBoost: 0.3
+  speedForMaxEffect: 250
+  afterburnerLoop: {fileID: 8300000, guid: c7b33f9e0862fef4fa0e982a66ee7648, type: 3}
+  afterburnerVolume: 1
+  windLoop: {fileID: 8300000, guid: fd8cf19b7ab10314dbc76de86d57af82, type: 3}
+  windVolumeMax: 0.397
+  windMaxSpeed: 300
+  crashSound: {fileID: 8300000, guid: 667c3966587c8b945b85713334fa23e2, type: 3}
+  crashVolume: 1
+  smoothing: 4
 --- !u!1 &766688754958688269
 GameObject:
   m_ObjectHideFlags: 0

@@ -24,11 +24,18 @@ public class PlayerController : MonoBehaviour
     float bulletLifetime = 3f;
     [SerializeField]
     Vector3 muzzleOffset = new Vector3(0, 0, 6f);
+    [SerializeField]
+    [Tooltip("Son joué à chaque projectile du canon. Optionnel.")]
+    AudioClip cannonSound;
+    [SerializeField]
+    [Range(0f, 1f)]
+    float cannonVolume = 0.6f;
 
     Vector3 controlInput;
     PlaneCamera planeCamera;
     [SerializeField] private launcher missileLauncher;
     Vector2 mouseLook;
+    bool mouseLookActive;
     bool firing;
     float nextFireTime;
 
@@ -103,6 +110,12 @@ public class PlayerController : MonoBehaviour
 
         if (context.control != null && context.control.device is Mouse)
         {
+            // Vue libre : la souris ne déplace la caméra que si le bouton
+            // de la molette est maintenu. Sinon, on ignore le mouvement.
+            if (!IsFreeLookHeld()) return;
+
+            mouseLookActive = true;
+
             mouseLook.x = Mathf.Clamp(
                 mouseLook.x + input.x * mouseSensitivity, -1f, 1f
             );
@@ -116,6 +129,18 @@ public class PlayerController : MonoBehaviour
         {
             planeCamera.SetInput(input);
         }
+    }
+
+    // Vrai tant que la commande de vue libre est maintenue : le bouton de
+    // la molette, ou la touche Alt gauche pour un portable sans souris
+    // (le pavé tactile n'a pas de bouton du milieu, mais il déplace le
+    // pointeur comme une souris).
+    static bool IsFreeLookHeld()
+    {
+        bool middleButton = Mouse.current != null && Mouse.current.middleButton.isPressed;
+        bool altKey = Keyboard.current != null && Keyboard.current.leftAltKey.isPressed;
+
+        return middleButton || altKey;
     }
 
     public void OnToggleFlaps(InputAction.CallbackContext context)
@@ -175,6 +200,8 @@ public class PlayerController : MonoBehaviour
             bulletLifetime,
             planeTransform
         );
+
+        Sfx.Play2D(cannonSound, cannonVolume);
     }
 
     void Update()
@@ -182,6 +209,15 @@ public class PlayerController : MonoBehaviour
         if (plane == null) return;
 
         plane.SetControlInput(controlInput);
+
+        // Molette relâchée : la caméra revient derrière l'avion. Le retour
+        // est progressif, PlaneCamera lisse déjà le mouvement (Look Alpha).
+        if (mouseLookActive && !IsFreeLookHeld())
+        {
+            mouseLookActive = false;
+            mouseLook = Vector2.zero;
+            planeCamera.SetInput(mouseLook);
+        }
 
         if (firing &&
             !plane.Dead &&

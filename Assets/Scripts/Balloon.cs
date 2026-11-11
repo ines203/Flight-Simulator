@@ -34,6 +34,14 @@ public class Balloon : MonoBehaviour {
     [Tooltip("Durée de vie de l'effet de destruction, en secondes.")]
     float deathEffectDuration = 4f;
 
+    [SerializeField]
+    [Tooltip("Son joué à la position de la montgolfière à sa mort. Optionnel.")]
+    AudioClip deathSound;
+
+    [SerializeField]
+    [Range(0f, 1f)]
+    float deathVolume = 1f;
+
     Health health;
 
     public Health Health { get { return health; } }
@@ -86,6 +94,10 @@ public class Balloon : MonoBehaviour {
             var effect = Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
             Destroy(effect, Mathf.Max(0f, deathEffectDuration));
         }
+
+        // Sfx.PlayAt crée son propre objet : le son continue après le
+        // Destroy(gameObject) plus bas.
+        Sfx.PlayAt(deathSound, transform.position, deathVolume);
 
         // On cache et on désactive tout de suite, avant la suppression
         // réelle à la fin de la frame : plus aucune balle ni collision ne

@@ -7,6 +7,12 @@ public class Missile : MonoBehaviour
     public float speed = 60f;
     public float lifetime = 5f;
 
+    [Header("Audio")]
+    [Tooltip("Son joué au point d'impact. Optionnel.")]
+    public AudioClip impactSound;
+    [Range(0f, 1f)]
+    public float impactVolume = 1f;
+
     private Rigidbody rb;
 
     void Start()
@@ -34,6 +40,9 @@ public class Missile : MonoBehaviour
         
         // Explosion or damage logic will go here
         
+        // Sfx.PlayAt keeps playing after the missile is destroyed
+        Sfx.PlayAt(impactSound, transform.position, impactVolume);
+
         // Destroy the missile immediately upon impact
         Destroy(gameObject);
     }

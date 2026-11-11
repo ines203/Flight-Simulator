@@ -7,6 +7,10 @@ public class launcher : MonoBehaviour
     [SerializeField] private GameObject _rocket;
     [SerializeField] private GameObject _missilePropR;
     [SerializeField] private GameObject _missilePropL;
+    [SerializeField, Tooltip("Son joué au lancement des missiles. Optionnel.")]
+    private AudioClip _launchSound;
+    [SerializeField, Range(0f, 1f)]
+    private float _launchVolume = 0.8f;
 
     // [SerializeField] private GameObject _missileProp;
     // Start is called before the first frame update
@@ -49,5 +53,7 @@ public class launcher : MonoBehaviour
             _missilePropL.transform.position,
             _missilePropL.transform.rotation
         );
+
+        Sfx.Play2D(_launchSound, _launchVolume);
     }
 }
