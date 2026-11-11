@@ -670,7 +670,7 @@ MonoBehaviour:
   - {fileID: 4482593638631049769}
   damageEffect: {fileID: 0}
   deathEffect: {fileID: 7180632626739445123}
-  initialSpeed: 0
+  initialSpeed: 100
 --- !u!114 &187514188077544146
 MonoBehaviour:
   m_ObjectHideFlags: 0
