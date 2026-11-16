@@ -36,6 +36,8 @@ public class Aerodynamics {
     const float CBAR = 11.32f;
     const float XCGR = 0.35f;
     const float HX = 160;
+// Air brake drag coefficient
+const float airBrakeDragCoefficient = 0.5f;
 
     float[,] dampTable;
     float[,] xAxisTable;
@@ -179,86 +181,166 @@ public class Aerodynamics {
         return QS * GetZAxisForceCoefficient(alpha, 0, elevator);
     }
 
-    public AerodynamicForces CalculateAerodynamics(AerodynamicState currentState) {
-        AerodynamicForces result = new AerodynamicForces();
+public AerodynamicForces CalculateAerodynamics(AerodynamicState currentState) {
+    AerodynamicForces result = new AerodynamicForces();
 
-        Vector3 forceCoefficient = GetForceCoefficient(
-            currentState.alpha, currentState.beta,
-            currentState.controlSurfaces.aileron, currentState.controlSurfaces.rudder, currentState.controlSurfaces.elevator
-        );
+    Vector3 forceCoefficient = GetForceCoefficient(
+        currentState.alpha,
+        currentState.beta,
+        currentState.controlSurfaces.aileron,
+        currentState.controlSurfaces.rudder,
+        currentState.controlSurfaces.elevator
+    );
 
-        Vector3 momentCoefficient = GetMomentCoefficient(
-            currentState.alpha, currentState.beta, currentState.controlSurfaces.elevator
-        );
+    Vector3 momentCoefficient = GetMomentCoefficient(
+        currentState.alpha,
+        currentState.beta,
+        currentState.controlSurfaces.elevator
+    );
 
-        CalculateDampingValues(currentState.alpha);
+    CalculateDampingValues(currentState.alpha);
 
-        // calculate variables
-        float P = currentState.angularVelocity.x;   // roll rate
-        float Q = currentState.angularVelocity.y;   // pitch rate
-        float R = currentState.angularVelocity.z;   // yaw rate
+    // Angular velocities
+    float P = currentState.angularVelocity.x;
+    float Q = currentState.angularVelocity.y;
+    float R = currentState.angularVelocity.z;
 
-        float airspeed = Mathf.Max(1, currentState.velocity.magnitude);
-        float TVT = 0.5f / airspeed;
+    float airspeed = Mathf.Max(1f, currentState.velocity.magnitude);
+    float TVT = 0.5f / airspeed;
 
-        float B2V = wingSpanFt * TVT;
-        float CQ = CBAR * Q * TVT;
+    float B2V = wingSpanFt * TVT;
+    float CQ = CBAR * Q * TVT;
 
-        float DAIL = currentState.controlSurfaces.aileron / 20.0f;
-        float DRDR = currentState.controlSurfaces.rudder / 30.0f;
+    float DAIL = currentState.controlSurfaces.aileron / 20.0f;
+    float DRDR = currentState.controlSurfaces.rudder / 30.0f;
 
-        float QS = currentState.airData.qBar * wingAreaFtSquared;
-        float QSB = QS * wingSpanFt;
+    float QS = currentState.airData.qBar * wingAreaFtSquared;
+    float QSB = QS * wingSpanFt;
 
-        // damping
-        float CXT = forceCoefficient.x + CQ * dampingTable[0];
-        float CYT = forceCoefficient.y + B2V * (dampingTable[1] * R + dampingTable[2] * P);
-        float CZT = forceCoefficient.z + CQ * dampingTable[3];
+    // Aerodynamic coefficients with damping
+    float CXT = forceCoefficient.x + CQ * dampingTable[0];
 
-        float CLT = momentCoefficient.x + B2V * (dampingTable[4] * R + dampingTable[5] * P);
-        CLT += GetDLDA(currentState.alpha, currentState.beta) * DAIL;
-        CLT += GetDLDR(currentState.alpha, currentState.beta) * DRDR;
-        float CMT = momentCoefficient.y + CQ * dampingTable[6] + CZT * (XCGR - currentState.xcg);
-        float CNT = momentCoefficient.z + B2V * (dampingTable[7] * R + dampingTable[8] * P) - CYT * (XCGR - currentState.xcg) * CBAR / wingSpanFt;
-        CNT += GetDNDA(currentState.alpha, currentState.beta) * DAIL;
-        CNT += GetDNDR(currentState.alpha, currentState.beta) * DRDR;
+    float CYT =
+        forceCoefficient.y +
+        B2V * (dampingTable[1] * R + dampingTable[2] * P);
 
-        // forces
-        // Acceleration in original text. Need to calculate force instead of acceleration
-        float UDOT = QS * CXT;
-        float VDOT = QS * CYT;
-        float WDOT = QS * CZT;
+    float CZT =
+        forceCoefficient.z +
+        CQ * dampingTable[3];
 
-        // moments
-        float ROLL = QSB * CLT;
-        float PITCH = QS * CBAR * CMT;
-        float YAW = QSB * CNT;
-        float PQ = P * Q;
-        float QR = Q * R;
-        float QHX = Q * HX;
+    float CLT =
+        momentCoefficient.x +
+        B2V * (dampingTable[4] * R + dampingTable[5] * P);
 
-        // calculate inertia values
-        float AXX = currentState.inertiaTensor.x;
-        float AYY = currentState.inertiaTensor.y;
-        float AZZ = currentState.inertiaTensor.z;
-        float AXZ = currentState.inertiaTensor.w;
+    CLT += GetDLDA(currentState.alpha, currentState.beta) * DAIL;
+    CLT += GetDLDR(currentState.alpha, currentState.beta) * DRDR;
 
-        float AXZS = AXZ * AXZ;
-        float XPQ = AXZ * (AXX - AYY + AZZ);
-        float GAM = AXX * AZZ - AXZS;
-        float XQR = AZZ * (AZZ - AYY) + AXZS;
-        float ZPQ = (AXX - AYY) * AXX + AXZS;
-        float YPR = AZZ - AXX;
+    float CMT =
+        momentCoefficient.y +
+        CQ * dampingTable[6] +
+        CZT * (XCGR - currentState.xcg);
 
-        float rollAccel  = ((XPQ * PQ)    - (XQR * QR) + (AZZ * ROLL) + (AXZ * (YAW + QHX))) / GAM;
-        float pitchAccel = ((YPR * P * R) - (AXZ * (P * P - R * R))   + PITCH - (R * HX))    / AYY;
-        float yawAccel   = ((ZPQ * PQ)    - (XPQ * QR) + (AXZ * ROLL) + (AXX * (YAW + QHX))) / GAM;
+    float CNT =
+        momentCoefficient.z +
+        B2V * (dampingTable[7] * R + dampingTable[8] * P) -
+        CYT * (XCGR - currentState.xcg) *
+        CBAR / wingSpanFt;
 
-        result.force = new Vector3(UDOT, VDOT, WDOT);
-        result.angularAcceleration = new Vector3(rollAccel, pitchAccel, yawAccel);
+    CNT += GetDNDA(currentState.alpha, currentState.beta) * DAIL;
+    CNT += GetDNDR(currentState.alpha, currentState.beta) * DRDR;
 
-        return result;
+    // Aerodynamic forces
+    // Acceleration in original text. Need to calculate force instead of acceleration
+    float UDOT = QS * CXT;
+    float VDOT = QS * CYT;
+    float WDOT = QS * CZT;
+
+    /* Air brake
+     * Hold B to activate the air brake.
+     * Releasing B disables the air brake.
+     * The air brake adds drag without changing the throttle.
+     */
+    bool airBrakeActive = Input.GetKey(KeyCode.B);
+
+    if (airBrakeActive && airspeed > 1f) {
+        float airBrakeForce =
+            currentState.airData.qBar *
+            wingAreaFtSquared *
+            airBrakeDragCoefficient;
+
+        /* Apply the air brake force in the opposite direction
+         * of the aircraft's forward movement.
+         */
+        float movementDirection = Mathf.Sign(currentState.velocity.x);
+
+        if (movementDirection != 0f) {
+            UDOT -= movementDirection * airBrakeForce;
+        }
     }
+
+    // Aerodynamic moments
+    float ROLL = QSB * CLT;
+    float PITCH = QS * CBAR * CMT;
+    float YAW = QSB * CNT;
+
+    float PQ = P * Q;
+    float QR = Q * R;
+    float QHX = Q * HX;
+
+    // Calculate inertia values
+    float AXX = currentState.inertiaTensor.x;
+    float AYY = currentState.inertiaTensor.y;
+    float AZZ = currentState.inertiaTensor.z;
+    float AXZ = currentState.inertiaTensor.w;
+
+    float AXZS = AXZ * AXZ;
+    float XPQ = AXZ * (AXX - AYY + AZZ);
+    float GAM = AXX * AZZ - AXZS;
+    float XQR = AZZ * (AZZ - AYY) + AXZS;
+    float ZPQ = (AXX - AYY) * AXX + AXZS;
+    float YPR = AZZ - AXX;
+
+    // Calculate angular acceleration
+    float rollAccel =
+        (
+            (XPQ * PQ) -
+            (XQR * QR) +
+            (AZZ * ROLL) +
+            (AXZ * (YAW + QHX))
+        ) / GAM;
+
+    float pitchAccel =
+        (
+            (YPR * P * R) -
+            (AXZ * (P * P - R * R)) +
+            PITCH -
+            (R * HX)
+        ) / AYY;
+
+    float yawAccel =
+        (
+            (ZPQ * PQ) -
+            (XPQ * QR) +
+            (AXZ * ROLL) +
+            (AXX * (YAW + QHX))
+        ) / GAM;
+
+    // Store calculated forces
+    result.force = new Vector3(
+        UDOT,
+        VDOT,
+        WDOT
+    );
+
+    // Store calculated angular acceleration
+    result.angularAcceleration = new Vector3(
+        rollAccel,
+        pitchAccel,
+        yawAccel
+    );
+
+    return result;
+}
 
     Vector3 GetForceCoefficient(float alpha, float beta, float aileron, float rudder, float elevator) {
         return new Vector3(
